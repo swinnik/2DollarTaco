@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { Button } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
@@ -56,6 +57,7 @@ const NewSpot = () => {
       setVendorName("");
       setBestProtein("");
       setMarkerLocation(null);
+      Keyboard.dismiss();
     } else {
       console.log(
         "Please enter vendor name, best protein, and select a location"
@@ -64,7 +66,7 @@ const NewSpot = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
       {initialRegion && (
         <MapView
           style={styles.map}
@@ -93,7 +95,8 @@ const NewSpot = () => {
       />
 
       <Button title="Save Location" onPress={handleSaveLocation} />
-    </View>
+      <View style={{ height: 100 }} />
+    </KeyboardAvoidingView>
   );
 };
 
