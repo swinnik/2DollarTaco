@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,13 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { VendorContext } from "../App";
 
-const NewSpot = () => {
+const NewSpot = ({ navigation }) => {
   const { addVendor } = useContext(VendorContext);
   const [initialRegion, setInitialRegion] = useState(null);
   const [markerLocation, setMarkerLocation] = useState(null);
   const [vendorName, setVendorName] = useState("");
   const [bestProtein, setBestProtein] = useState("");
+  const bestProteinRef = useRef();
 
   useEffect(() => {
     (async () => {
@@ -58,6 +59,7 @@ const NewSpot = () => {
       setBestProtein("");
       setMarkerLocation(null);
       Keyboard.dismiss();
+      navigation.navigate("Home");
     } else {
       console.log(
         "Please enter vendor name, best protein, and select a location"
@@ -84,6 +86,8 @@ const NewSpot = () => {
         value={vendorName}
         onChangeText={setVendorName}
         placeholder="Enter vendor name"
+        returnKeyType="next"
+        onSubmitEditing={() => bestProteinRef.current.focus()}
       />
 
       <Text style={styles.label}>Best Protein:</Text>
@@ -92,6 +96,9 @@ const NewSpot = () => {
         value={bestProtein}
         onChangeText={setBestProtein}
         placeholder="Enter best protein"
+        returnKeyType="done"
+        ref={bestProteinRef}
+        onSubmitEditing={handleSaveLocation}
       />
 
       <Button title="Save Location" onPress={handleSaveLocation} />
