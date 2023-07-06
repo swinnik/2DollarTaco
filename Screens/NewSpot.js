@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { Button } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
@@ -76,33 +77,54 @@ const NewSpot = ({ navigation }) => {
         <MapView
           style={styles.map}
           initialRegion={initialRegion}
-          onPress={(event) => setMarkerLocation(event.nativeEvent.coordinate)}
+          onPress={(event) => {
+            setMarkerLocation(event.nativeEvent.coordinate);
+            Keyboard.dismiss();
+          }}
         >
           {markerLocation && (
             <Marker coordinate={markerLocation} title="Current Location" />
           )}
         </MapView>
       )}
-      <Text style={styles.label}>Vendor Name:</Text>
-      <TextInput
-        style={styles.input}
-        value={vendorName}
-        onChangeText={setVendorName}
-        placeholder="Enter vendor name"
-        returnKeyType="next"
-        onSubmitEditing={() => bestProteinRef.current.focus()}
-      />
+      <View style={styles.dropdownContainer}>
+        <View>
+          <Text style={styles.label}>Vendor Name:</Text>
+          <TextInput
+            style={styles.input}
+            value={vendorName}
+            onChangeText={setVendorName}
+            placeholder="Enter vendor name"
+            returnKeyType="next"
+            onSubmitEditing={() => bestProteinRef.current.focus()}
+          />
 
-      <Text style={styles.label}>Best Protein:</Text>
-      <TextInput
-        style={styles.input}
-        value={bestProtein}
-        onChangeText={setBestProtein}
-        placeholder="Enter best protein"
-        returnKeyType="done"
-        ref={bestProteinRef}
-        onSubmitEditing={handleSaveLocation}
-      />
+          <Text style={styles.label}>Best Protein:</Text>
+          <TextInput
+            style={styles.input}
+            value={bestProtein}
+            onChangeText={setBestProtein}
+            placeholder="Enter best protein"
+            returnKeyType="done"
+            ref={bestProteinRef}
+            onSubmitEditing={handleSaveLocation}
+            editable={true} // Disable editing if the value is selected from the dropdown
+          />
+        </View>
+        <Picker
+          selectedValue={bestProtein}
+          onValueChange={(value) => setBestProtein(value)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Carnitas" value="Carnitas" />
+          <Picker.Item label="Carne Asada" value="Carne Asada" />
+          <Picker.Item label="Pollo" value="Pollo" />
+          <Picker.Item label="Mariscos" value="Mariscos" />
+          <Picker.Item label="Buche" value="Buche" />
+          <Picker.Item label="Suadero" value="Suadero" />
+          <Picker.Item label="Al Pastor" value="Al Pastor" />
+        </Picker>
+      </View>
 
       <Button title="Save Location" onPress={handleSaveLocation} />
       <View style={{ height: 100 }} />
@@ -129,6 +151,18 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 16,
+    width: "150%",
+  },
+  dropdownContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 16,
+    width: "100%",
+  },
+  picker: {
+    flex: 1,
+    marginRight: 8,
+    width: 30,
   },
 });
 
