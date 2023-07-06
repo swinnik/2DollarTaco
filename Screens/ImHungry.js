@@ -5,9 +5,10 @@ import {
   StyleSheet,
   Linking,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import Swiper from "react-native-swiper";
-import { Card } from "react-native-elements";
+import { Card, Button } from "react-native-elements";
 import { VendorContext } from "../App";
 
 const ImHungry = () => {
@@ -30,24 +31,44 @@ const ImHungry = () => {
         showsButtons={false} // Hide navigation buttons
       >
         {vendors.map((vendor) => (
-          <TouchableOpacity
-            key={vendor.name}
-            style={styles.cardContainer}
-            onPress={() =>
-              openGoogleMaps(
-                vendor.location.latitude,
-                vendor.location.longitude
-              )
-            }
-          >
-            <Card>
-              <Card.Title>{vendor.name}</Card.Title>
-              <Card.Divider />
-              <Text>{vendor.protein}</Text>
-              <Text>Latitude: {vendor.location.latitude}</Text>
-              <Text>Longitude: {vendor.location.longitude}</Text>
+          <View style={styles.cardContainer}>
+            <Card containerStyle={styles.card}>
+              <View style={styles.touchableCard} key={vendor.name}>
+                <Card.Title>{vendor.name}</Card.Title>
+                <Card.Divider />
+                <View style={styles.bottom}>
+                  <Text>You gotta try their {vendor.protein}!!</Text>
+                  <ScrollView style={styles.reviews}>
+                    <Text>
+                      Top Rated Review!!!Top Rated Review!!!Top Rated
+                      Review!!!Top Rated Review!!! Top Rated Review!!!Top Rated
+                      Review!!!Top Rated Review!!!Top Rated Review!!! Top Rated
+                      Review!!!Top Rated Review!!!Top Rated Review!!!Top Rated
+                      Review!!! Top Rated Review!!!Top Rated Review!!!Top Rated
+                      Review!!!Top Rated Review!!! Top Rated Review!!!Top Rated
+                      Review!!!Top Rated Review!!!Top Rated Review!!! Top Rated
+                      Review!!!Top Rated Review!!!Top Rated Review!!!Top Rated
+                      Review!!! Top Rated Review!!!Top Rated Review!!!Top Rated
+                      Review!!!Top Rated Review!!! Top Rated Review!!!Top Rated
+                      Review!!!Top Rated Review!!!Top Rated Review!!! Top Rated
+                      Review!!!Top Rated Review!!!Top Rated Review!!!Top Rated
+                      Review!!!
+                    </Text>
+                  </ScrollView>
+                  <Button
+                    title="Take me to my Taco!"
+                    style={styles.tacoButton}
+                    onPress={() =>
+                      openGoogleMaps(
+                        vendor.location.latitude,
+                        vendor.location.longitude
+                      )
+                    }
+                  />
+                </View>
+              </View>
             </Card>
-          </TouchableOpacity>
+          </View>
         ))}
       </Swiper>
     </View>
@@ -63,6 +84,30 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+  },
+  touchableCard: {
+    height: "100%",
+    display: "flex",
+  },
+  reviews: {
+    height: "50%",
+    width: "100%",
+    marginVertical: 20,
+  },
+  card: {
+    height: "40%",
+    display: "flex",
+    maxWidth: "80%",
+  },
+  bottom: {
+    // marginTop: 20,
+    display: "flex",
+    justifyContent: "space-between",
+    height: "80%",
+  },
+  tacoButton: {
+    width: "100%",
+    justifySelf: "flex-end",
   },
 });
 
