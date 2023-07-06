@@ -8,7 +8,7 @@ import {
   Keyboard,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { Button } from "@rneui/themed";
+import { Button, Overlay } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { VendorContext } from "../App";
@@ -19,7 +19,14 @@ const NewSpot = ({ navigation }) => {
   const [markerLocation, setMarkerLocation] = useState(null);
   const [vendorName, setVendorName] = useState("");
   const [bestProtein, setBestProtein] = useState("");
+  const [buttonTitle, setButtonTitle] = useState("Save Location");
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [review, setReview] = useState("");
+
+  const vendorNameRef = useRef();
   const bestProteinRef = useRef();
+  const textAreaRef = useRef();
 
   useEffect(() => {
     (async () => {
@@ -48,45 +55,93 @@ const NewSpot = ({ navigation }) => {
     })();
   }, []);
 
+  useEffect(() => {
+    if (
+      attemptedSubmit &&
+      vendorName !== "" &&
+      bestProtein !== "" &&
+      markerLocation
+    ) {
+      setButtonTitle("Save Location");
+    }
+  }, [vendorName, bestProtein, markerLocation]);
+
   const handleSaveLocation = () => {
     if (vendorName && bestProtein && markerLocation) {
       const newVendor = {
         name: vendorName,
         location: markerLocation,
         protein: bestProtein,
+        reviews: [review],
       };
       addVendor(newVendor);
       setVendorName("");
       setBestProtein("");
+      setReview("");
       setMarkerLocation(null);
       Keyboard.dismiss();
       navigation.navigate("Home");
     } else {
+      setButtonTitle("Complete all fields and Try Again!");
+      setAttemptedSubmit(true);
       console.log(
         "Please enter vendor name, best protein, and select a location"
       );
     }
   };
 
+  useEffect(() => {
+    if (visible) {
+      textAreaRef.current.focus();
+    }
+  }, [visible]);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
+  const handleSubmitReview = () => {
+    Keyboard.dismiss();
+    // vendorNameRef.current.focus();
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-      {!initialRegion && (
-        <Text style={styles.map}>Getting current location...</Text>
-      )}
-      {initialRegion && (
-        <MapView
-          style={styles.map}
-          initialRegion={initialRegion}
-          onPress={(event) => {
-            setMarkerLocation(event.nativeEvent.coordinate);
-            Keyboard.dismiss();
-          }}
+      <MapView
+        style={styles.map}
+        initialRegion={initialRegion}
+        onPress={(event) => {
+          setMarkerLocation(event.nativeEvent.coordinate);
+          Keyboard.dismiss();
+        }}
+      >
+        {markerLocation && (
+          <Marker coordinate={markerLocation} title="Current Location" />
+        )}
+      </MapView>
+
+      <View style={styles.overlayContainer}>
+        <Button title="Write a Review" onPress={toggleOverlay} />
+        <Overlay
+          isVisible={visible}
+          onBackdropPress={toggleOverlay}
+          overlayStyle={styles.overlay}
         >
-          {markerLocation && (
-            <Marker coordinate={markerLocation} title="Current Location" />
-          )}
-        </MapView>
-      )}
+          <View style={styles.overlayView}>
+            <Text style={styles.overlayText}>Write A Review</Text>
+            <TextInput
+              multiline={true}
+              containerStyle={styles.overlayTextArea}
+              onChangeText={setReview}
+              ref={textAreaRef}
+              returnKeyType="done"
+              onSubmitEditing={handleSubmitReview}
+            />
+            <Button onPress={toggleOverlay}>Submit Review</Button>
+          </View>
+        </Overlay>
+      </View>
+
       <View style={styles.dropdownContainer}>
         <View>
           <Text style={styles.label}>Vendor Name:</Text>
@@ -127,13 +182,36 @@ const NewSpot = ({ navigation }) => {
         </Picker>
       </View>
 
-      <Button title="Save Location" onPress={handleSaveLocation} />
-      <View style={{ height: 100 }} />
+      <Button title={buttonTitle} onPress={handleSaveLocation} />
+      <View style={{ height: 15 }} />
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  overlay: {},
+  overlayView: {
+    padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
+    width: 300,
+    height: 300,
+    position: "relative",
+    top: 10,
+  },
+  overlayTextArea: {
+    width: "80%", // Adjust the width as needed
+    height: 150, // Adjust the height as needed
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+  },
+
   container: {
     flex: 1,
   },
@@ -152,7 +230,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 16,
-    width: "120%",
+    width: 150,
   },
   dropdownContainer: {
     padding: 16,

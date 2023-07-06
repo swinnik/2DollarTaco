@@ -11,7 +11,7 @@ import Swiper from "react-native-swiper";
 import { Card, Button } from "react-native-elements";
 import { VendorContext } from "../App";
 
-const ImHungry = () => {
+const ImHungry = ({ navigation }) => {
   const { vendors } = useContext(VendorContext);
   console.log(vendors);
 
@@ -24,36 +24,31 @@ const ImHungry = () => {
     });
   };
 
+  const navigateHandler = (name) => () => {
+    navigation.navigate(name);
+  };
+
   return (
     <View style={styles.container}>
       <Swiper
         loop={false} // Disable looping of cards
         showsButtons={false} // Hide navigation buttons
       >
-        {vendors.map((vendor) => (
-          <View style={styles.cardContainer}>
+        {vendors.map((vendor, index) => (
+          <View style={styles.cardContainer} key={index}>
             <Card containerStyle={styles.card}>
               <View style={styles.touchableCard} key={vendor.name}>
-                <Card.Title>{vendor.name}</Card.Title>
+                <Card.Title onPress={navigateHandler("VendorDetails")}>
+                  {vendor.name}
+                </Card.Title>
                 <Card.Divider />
                 <View style={styles.bottom}>
                   <Text>You gotta try their {vendor.protein}!!</Text>
-                  <ScrollView style={styles.reviews}>
-                    <Text>
-                      Top Rated Review!!!Top Rated Review!!!Top Rated
-                      Review!!!Top Rated Review!!! Top Rated Review!!!Top Rated
-                      Review!!!Top Rated Review!!!Top Rated Review!!! Top Rated
-                      Review!!!Top Rated Review!!!Top Rated Review!!!Top Rated
-                      Review!!! Top Rated Review!!!Top Rated Review!!!Top Rated
-                      Review!!!Top Rated Review!!! Top Rated Review!!!Top Rated
-                      Review!!!Top Rated Review!!!Top Rated Review!!! Top Rated
-                      Review!!!Top Rated Review!!!Top Rated Review!!!Top Rated
-                      Review!!! Top Rated Review!!!Top Rated Review!!!Top Rated
-                      Review!!!Top Rated Review!!! Top Rated Review!!!Top Rated
-                      Review!!!Top Rated Review!!!Top Rated Review!!! Top Rated
-                      Review!!!Top Rated Review!!!Top Rated Review!!!Top Rated
-                      Review!!!
-                    </Text>
+                  <ScrollView style={styles.scrollReviews}>
+                    {vendor.reviews &&
+                      vendor.reviews.map((review, index) => (
+                        <Text key={index}>{review}</Text>
+                      ))}
                   </ScrollView>
                   <Button
                     title="Take me to my Taco!"
@@ -89,12 +84,16 @@ const styles = StyleSheet.create({
     height: "100%",
     display: "flex",
   },
-  reviews: {
+  scrollReviews: {
     height: "50%",
     width: "100%",
     marginVertical: 20,
+    backgroundColor: "lightgrey",
+    borderRadius: 5,
+    padding: 10,
   },
   card: {
+    borderRadius: 5,
     height: "40%",
     display: "flex",
     maxWidth: "80%",

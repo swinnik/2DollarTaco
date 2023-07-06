@@ -14,6 +14,11 @@ export default function App() {
         longitude: -122.4194,
       },
       protein: "Carne Asada",
+      reviews: [
+        "I really liked this taco",
+        "What can i say, this taco is awesome!",
+        "I would eat this taco again",
+      ],
     },
     {
       name: "Elizabeths's Taco Truck",
@@ -22,6 +27,11 @@ export default function App() {
         longitude: -128.4194,
       },
       protein: "Buche",
+      reviews: [
+        "this is my favorite taco",
+        "I would eat this taco a million times",
+        "I would eat this taco again",
+      ],
     },
   ]);
 

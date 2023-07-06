@@ -3,7 +3,7 @@ import { createAppContainer } from "react-navigation";
 import Home from "../Screens/home";
 import ImHungry from "../Screens/ImHungry";
 import NewSpot from "../Screens/NewSpot";
-
+import VendorDetails from "../Screens/VendorDetails";
 import ReviewDetails from "../Screens/reviewDetails";
 
 const screens = {
@@ -18,6 +18,9 @@ const screens = {
   },
   ReviewDetails: {
     screen: ReviewDetails,
+  },
+  VendorDetails: {
+    screen: VendorDetails,
   },
 };
 
