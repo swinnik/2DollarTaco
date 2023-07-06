@@ -69,6 +69,9 @@ const NewSpot = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      {!initialRegion && (
+        <Text style={styles.map}>Getting current location...</Text>
+      )}
       {initialRegion && (
         <MapView
           style={styles.map}
