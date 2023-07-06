@@ -115,6 +115,7 @@ const NewSpot = ({ navigation }) => {
           selectedValue={bestProtein}
           onValueChange={(value) => setBestProtein(value)}
           style={styles.picker}
+          itemStyle={styles.pickerItem}
         >
           <Picker.Item label="Carnitas" value="Carnitas" />
           <Picker.Item label="Carne Asada" value="Carne Asada" />
@@ -151,18 +152,24 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 16,
-    width: "150%",
+    width: "120%",
   },
   dropdownContainer: {
+    padding: 16,
+    display: "flex",
     flexDirection: "row",
-    alignItems: "flex-start",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
     marginBottom: 16,
-    width: "100%",
   },
   picker: {
-    flex: 1,
     marginRight: 8,
-    width: 30,
+    justifySelf: "flex-end",
+  },
+  pickerItem: {
+    fontSize: 15,
+    width: 180,
+    border: "solid black",
   },
 });
 
