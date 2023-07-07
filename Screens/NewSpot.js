@@ -19,12 +19,14 @@ const NewSpot = ({ navigation }) => {
   const [markerLocation, setMarkerLocation] = useState(null);
   const [vendorName, setVendorName] = useState("");
   const [bestProtein, setBestProtein] = useState("");
+  const [price, setPrice] = useState("");
   const [buttonTitle, setButtonTitle] = useState("Save Location");
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");
 
   const vendorNameRef = useRef();
+  const priceRef = useRef();
   const bestProteinRef = useRef();
   const textAreaRef = useRef();
 
@@ -60,6 +62,7 @@ const NewSpot = ({ navigation }) => {
       attemptedSubmit &&
       vendorName !== "" &&
       bestProtein !== "" &&
+      price !== "" &&
       markerLocation
     ) {
       setButtonTitle("Save Location");
@@ -72,12 +75,14 @@ const NewSpot = ({ navigation }) => {
         name: vendorName,
         location: markerLocation,
         protein: bestProtein,
+        price: price,
         reviews: [review],
       };
       addVendor(newVendor);
       setVendorName("");
       setBestProtein("");
       setReview("");
+      setPrice("");
       setMarkerLocation(null);
       Keyboard.dismiss();
       navigation.navigate("Home");
@@ -100,9 +105,9 @@ const NewSpot = ({ navigation }) => {
     setVisible(!visible);
   };
 
-  const handleSubmitReview = () => {
-    Keyboard.dismiss();
-    // vendorNameRef.current.focus();
+  const submitReview = () => {
+    console.log("submitting review");
+    toggleOverlay();
   };
 
   return (
@@ -130,14 +135,13 @@ const NewSpot = ({ navigation }) => {
           <View style={styles.overlayView}>
             <Text style={styles.overlayText}>Write A Review</Text>
             <TextInput
-              multiline={true}
               containerStyle={styles.overlayTextArea}
               onChangeText={setReview}
               ref={textAreaRef}
-              returnKeyType="done"
-              onSubmitEditing={handleSubmitReview}
+              returnKeyType="next"
+              onSubmitEditing={submitReview}
             />
-            <Button onPress={toggleOverlay}>Submit Review</Button>
+            {/* <Button onPress={toggleOverlay}>Submit Review</Button>x */}
           </View>
         </Overlay>
       </View>
@@ -151,6 +155,7 @@ const NewSpot = ({ navigation }) => {
             onChangeText={setVendorName}
             placeholder="Enter vendor name"
             returnKeyType="next"
+            ref={vendorNameRef}
             onSubmitEditing={() => bestProteinRef.current.focus()}
           />
 
@@ -160,8 +165,20 @@ const NewSpot = ({ navigation }) => {
             value={bestProtein}
             onChangeText={setBestProtein}
             placeholder="Enter best protein"
-            returnKeyType="done"
+            returnKeyType="next"
             ref={bestProteinRef}
+            onSubmitEditing={() => priceRef.current.focus()}
+            editable={true} // Disable editing if the value is selected from the dropdown
+          />
+          <Text style={styles.label}>Price:</Text>
+          <TextInput
+            style={styles.input}
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="numeric"
+            placeholder="Enter Price"
+            returnKeyType="done"
+            ref={priceRef}
             onSubmitEditing={handleSaveLocation}
             editable={true} // Disable editing if the value is selected from the dropdown
           />
@@ -195,7 +212,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-between",
+    // justifyContent: "space-around",fasdf
     marginBottom: 16,
     width: 300,
     height: 300,

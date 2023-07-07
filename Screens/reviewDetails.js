@@ -8,8 +8,9 @@ export default function reviewDetails({ navigation }) {
 
   return (
     <View>
-      <Text>reviewDetails</Text>
+      <Text>{reviewDetails}</Text>
       <Button title="go to home" onPress={pressHandler} />
     </View>
   );
 }
+        

@@ -38,6 +38,5 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: "center",
-    justifySelf: "center",
   },
 });

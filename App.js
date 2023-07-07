@@ -14,6 +14,7 @@ export default function App() {
         longitude: -122.4194,
       },
       protein: "Carne Asada",
+      price: 2.57,
       reviews: [
         "I really liked this taco",
         "What can i say, this taco is awesome!",
@@ -27,6 +28,7 @@ export default function App() {
         longitude: -128.4194,
       },
       protein: "Buche",
+      price: 2.5,
       reviews: [
         "this is my favorite taco",
         "I would eat this taco a million times",

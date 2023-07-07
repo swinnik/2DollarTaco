@@ -13,19 +13,17 @@ import { VendorContext } from "../App";
 
 const ImHungry = ({ navigation }) => {
   const { vendors } = useContext(VendorContext);
-  console.log(vendors);
 
   const openGoogleMaps = (latitude, longitude) => {
     const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-    console.log("first");
 
     Linking.openURL(url).catch(() => {
       console.log("Error opening Google Maps");
     });
   };
 
-  const navigateHandler = (name) => () => {
-    navigation.navigate(name);
+  const navigateHandler = (name, vendor) => () => {
+    navigation.navigate(name, { vendor });
   };
 
   return (
@@ -38,16 +36,21 @@ const ImHungry = ({ navigation }) => {
           <View style={styles.cardContainer} key={index}>
             <Card containerStyle={styles.card}>
               <View style={styles.touchableCard} key={vendor.name}>
-                <Card.Title onPress={navigateHandler("VendorDetails")}>
+                <Card.Title
+                  onPress={(navigateHandler("VendorDetails"), vendor)}
+                >
                   {vendor.name}
                 </Card.Title>
                 <Card.Divider />
                 <View style={styles.bottom}>
-                  <Text>You gotta try their {vendor.protein}!!</Text>
+                  <Text>You gotta try their {vendor.protein}!</Text>
+                  <Text>It only costs {vendor.price}!</Text>
                   <ScrollView style={styles.scrollReviews}>
                     {vendor.reviews &&
                       vendor.reviews.map((review, index) => (
-                        <Text key={index}>{review}</Text>
+                        <Text key={index}>
+                          {review.length ? review : "no reviews yet!"}
+                        </Text>
                       ))}
                   </ScrollView>
                   <Button
