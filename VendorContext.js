@@ -1,11 +1,8 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import Navigator from "./routes/homeStack";
 import React, { createContext, useState } from "react";
 
 export const VendorContext = createContext();
 
-export default function App() {
+export const VendorProvider = ({ children }) => {
   const [vendors, setVendors] = useState([
     {
       name: "Sean's Taco Truck",
@@ -17,7 +14,7 @@ export default function App() {
       price: 2.57,
       reviews: [
         "I really liked this taco",
-        "What can i say, this taco is awesome!",
+        "What can I say, this taco is awesome!",
         "I would eat this taco again",
       ],
     },
@@ -30,7 +27,7 @@ export default function App() {
       protein: "Buche",
       price: 2.5,
       reviews: [
-        "this is my favorite taco",
+        "This is my favorite taco",
         "I would eat this taco a million times",
         "I would eat this taco again",
       ],
@@ -41,26 +38,22 @@ export default function App() {
     setVendors((prevVendors) => [...prevVendors, vendor]);
   };
 
-  const addReview = (vendor, review) => {
+  const addReview = (vendorName, review) => {
     setVendors((prevVendors) => {
       const updatedVendors = [...prevVendors];
-      updatedVendors[vendor.name].reviews.push(review);
+      const vendorIndex = updatedVendors.findIndex(
+        (vendor) => vendor.name === vendorName
+      );
+      if (vendorIndex !== -1) {
+        updatedVendors[vendorIndex].reviews.push(review);
+      }
       return updatedVendors;
     });
   };
 
   return (
     <VendorContext.Provider value={{ vendors, addVendor, addReview }}>
-      <Navigator />
+      {children}
     </VendorContext.Provider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+};

@@ -219,6 +219,12 @@ const styles = StyleSheet.create({
     position: "relative",
     top: 10,
   },
+
+  overlayText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
   overlayTextArea: {
     width: "80%", // Adjust the width as needed
     height: 150, // Adjust the height as needed

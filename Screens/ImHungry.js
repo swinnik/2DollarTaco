@@ -1,18 +1,44 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Linking,
   TouchableOpacity,
+  TextInput,
   ScrollView,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { Card, Button } from "react-native-elements";
+import { Overlay } from "@rneui/themed";
 import { VendorContext } from "../App";
 
 const ImHungry = ({ navigation }) => {
-  const { vendors } = useContext(VendorContext);
+  const { vendors, addReview } = useContext(VendorContext);
+  const [visible, setVisible] = useState(false);
+  const [review, setReview] = useState("");
+  const [currentVendor, setCurrentVendor] = useState(null);
+  const textAreaRef = useRef();
+
+  useEffect(() => {
+    if (visible) {
+      textAreaRef.current.focus();
+    }
+  }, [visible]);
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
+  const openOverlay = (vendor) => {
+    toggleOverlay();
+    setCurrentVendor(vendor);
+  };
+
+  const submitReview = () => {
+    console.log("submitting review");
+    addReview(currentVendor, review);
+    toggleOverlay();
+  };
 
   const openGoogleMaps = (latitude, longitude) => {
     const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
@@ -22,12 +48,25 @@ const ImHungry = ({ navigation }) => {
     });
   };
 
-  const navigateHandler = (name, vendor) => () => {
-    navigation.navigate(name, { vendor });
-  };
-
   return (
     <View style={styles.container}>
+      <Overlay
+        isVisible={visible}
+        onBackdropPress={toggleOverlay}
+        overlayStyle={styles.overlay}
+      >
+        <View style={styles.overlayView}>
+          <Text style={styles.overlayText}>Write A Review</Text>
+          <TextInput
+            containerStyle={styles.overlayTextArea}
+            onChangeText={setReview}
+            ref={textAreaRef}
+            returnKeyType="done"
+            onSubmitEditing={submitReview}
+          />
+          {/* <Button onPress={toggleOverlay}>Submit Review</Button>x */}
+        </View>
+      </Overlay>
       <Swiper
         loop={false} // Disable looping of cards
         showsButtons={false} // Hide navigation buttons
@@ -36,23 +75,26 @@ const ImHungry = ({ navigation }) => {
           <View style={styles.cardContainer} key={index}>
             <Card containerStyle={styles.card}>
               <View style={styles.touchableCard} key={vendor.name}>
-                <Card.Title
-                  onPress={(navigateHandler("VendorDetails"), vendor)}
-                >
-                  {vendor.name}
-                </Card.Title>
+                <Card.Title>{vendor.name}</Card.Title>
                 <Card.Divider />
                 <View style={styles.bottom}>
                   <Text>You gotta try their {vendor.protein}!</Text>
                   <Text>It only costs {vendor.price}!</Text>
-                  <ScrollView style={styles.scrollReviews}>
-                    {vendor.reviews &&
-                      vendor.reviews.map((review, index) => (
-                        <Text key={index}>
-                          {review.length ? review : "no reviews yet!"}
-                        </Text>
-                      ))}
-                  </ScrollView>
+                  <View style={styles.scrollViewCurtain}>
+                    <ScrollView style={styles.scrollReviews}>
+                      {vendor.reviews &&
+                        vendor.reviews.map((review, index) => (
+                          <Text key={index}>
+                            {review.length ? "* " + review : "no reviews yet!"}
+                          </Text>
+                        ))}
+                    </ScrollView>
+                    <TouchableOpacity onPress={toggleOverlay}>
+                      <Text style={styles.scrollViewFooter}>
+                        Leave a review?
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                   <Button
                     title="Take me to my Taco!"
                     style={styles.tacoButton}
@@ -74,6 +116,34 @@ const ImHungry = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  overlayView: {
+    padding: 16,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    // justifyContent: "space-around",fasdf
+    marginBottom: 16,
+    width: 300,
+    height: 300,
+    position: "relative",
+    top: 10,
+  },
+  overlayText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  overlayTextArea: {
+    width: "80%", // Adjust the width as needed
+    height: 150, // Adjust the height as needed
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+    // marginTop: 100,
+    marginBottom: 16,
+  },
+
   container: {
     flex: 1,
   },
@@ -87,6 +157,10 @@ const styles = StyleSheet.create({
     height: "100%",
     display: "flex",
   },
+  scrollViewCurtain: {
+    height: "fit-content",
+    width: "fit-content",
+  },
   scrollReviews: {
     height: "50%",
     width: "100%",
@@ -95,9 +169,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
   },
+  scrollViewFooter: {
+    textAlign: "center",
+    fontStyle: "italic",
+    bottom: 40,
+  },
   card: {
     borderRadius: 5,
     height: "40%",
+    width: "100%",
     display: "flex",
     maxWidth: "80%",
   },

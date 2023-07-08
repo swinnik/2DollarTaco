@@ -21,9 +21,13 @@ const screens = {
   },
   VendorDetails: {
     screen: VendorDetails,
+    navigationOptions: {
+      headerShown: false, // Optional: Hide the header if desired
+    },
   },
 };
 
 const HomeStack = createStackNavigator(screens);
+const AppContainer = createAppContainer(HomeStack);
 
-export default createAppContainer(HomeStack);
+export default AppContainer;
