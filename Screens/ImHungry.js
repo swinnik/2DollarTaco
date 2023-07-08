@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { Card, Button } from "react-native-elements";
-import { VendorContext } from "../App";
+import { VendorContext } from "../VendorContext";
 
 const ImHungry = ({ navigation }) => {
   const { vendors } = useContext(VendorContext);
@@ -37,7 +37,7 @@ const ImHungry = ({ navigation }) => {
             <Card containerStyle={styles.card}>
               <View style={styles.touchableCard} key={vendor.name}>
                 <Card.Title
-                  onPress={(navigateHandler("VendorDetails"), vendor)}
+                  onPress={() => navigateHandler("VendorDetails", vendor)}
                 >
                   {vendor.name}
                 </Card.Title>
@@ -45,14 +45,17 @@ const ImHungry = ({ navigation }) => {
                 <View style={styles.bottom}>
                   <Text>You gotta try their {vendor.protein}!</Text>
                   <Text>It only costs {vendor.price}!</Text>
-                  <ScrollView style={styles.scrollReviews}>
-                    {vendor.reviews &&
-                      vendor.reviews.map((review, index) => (
-                        <Text key={index}>
-                          {review.length ? review : "no reviews yet!"}
-                        </Text>
-                      ))}
-                  </ScrollView>
+                  <View style={styles.scrollCurtain}>
+                    <ScrollView style={styles.scrollReviews}>
+                      {vendor.reviews &&
+                        vendor.reviews.map((review, index) => (
+                          <Text key={index}>
+                            {review.length ? review : "no reviews yet!"}
+                          </Text>
+                        ))}
+                    </ScrollView>
+                    <Text style={styles.writeAReview}>Write A Review!</Text>
+                  </View>
                   <Button
                     title="Take me to my Taco!"
                     style={styles.tacoButton}
@@ -87,6 +90,16 @@ const styles = StyleSheet.create({
     height: "100%",
     display: "flex",
   },
+  scrollCurtain: {
+    // backgroundColor: "blue",
+  },
+  writeAReview: {
+    position: "relative",
+    color: "blue",
+    bottom: 40,
+    alignSelf: "center",
+  },
+
   scrollReviews: {
     height: "50%",
     width: "100%",

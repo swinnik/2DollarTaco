@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import { Button, Overlay } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { VendorContext } from "../App";
+import { VendorContext } from "../VendorContext";
 
 const NewSpot = ({ navigation }) => {
   const { addVendor } = useContext(VendorContext);
