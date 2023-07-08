@@ -12,7 +12,6 @@ import Swiper from "react-native-swiper";
 import { Card, Button } from "react-native-elements";
 import { VendorContext } from "../VendorContext";
 import { Overlay } from "@rneui/themed";
-import { VendorContext } from "../App";
 
 const ImHungry = ({ navigation }) => {
   const { vendors, addReview } = useContext(VendorContext);
@@ -76,35 +75,25 @@ const ImHungry = ({ navigation }) => {
           <View style={styles.cardContainer} key={index}>
             <Card containerStyle={styles.card}>
               <View style={styles.touchableCard} key={vendor.name}>
-                <Card.Title
-                  onPress={() => navigateHandler("VendorDetails", vendor)}
-                >
-                  {vendor.name}
-                </Card.Title>
                 <Card.Title>{vendor.name}</Card.Title>
                 <Card.Divider />
                 <View style={styles.bottom}>
                   <Text>You gotta try their {vendor.protein}!</Text>
                   <Text>It only costs {vendor.price}!</Text>
                   <View style={styles.scrollViewCurtain}>
-                    <View style={styles.scrollCurtain}>
-                      <ScrollView style={styles.scrollReviews}>
-                        {vendor.reviews &&
-                          vendor.reviews.map((review, index) => (
-                            <Text key={index}>
-                              {review.length
-                                ? "* " + review
-                                : "no reviews yet!"}
-                            </Text>
-                          ))}
-                      </ScrollView>
-                      <TouchableOpacity onPress={toggleOverlay}>
-                        <Text style={styles.scrollViewFooter}>
-                          Leave a review?
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <Text style={styles.writeAReview}>Write A Review!</Text>
+                    <ScrollView style={styles.scrollReviews}>
+                      {vendor.reviews &&
+                        vendor.reviews.map((review, index) => (
+                          <Text key={index}>
+                            {review.length ? "* " + review : "no reviews yet!"}
+                          </Text>
+                        ))}
+                    </ScrollView>
+                    <TouchableOpacity onPress={toggleOverlay}>
+                      <Text style={styles.scrollViewFooter}>
+                        Leave a review?
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                   <Button
                     title="Take me to my Taco!"
@@ -168,9 +157,6 @@ const styles = StyleSheet.create({
     height: "100%",
     display: "flex",
   },
-  scrollCurtain: {
-    // backgroundColor: "blue",
-  },
   writeAReview: {
     position: "relative",
     color: "blue",
@@ -179,9 +165,9 @@ const styles = StyleSheet.create({
   },
 
   scrollReviews: {
-    height: "50%",
+    height: "60%",
     width: "100%",
-    marginVertical: 20,
+    marginVertical: 10,
     backgroundColor: "lightgrey",
     borderRadius: 5,
     padding: 10,
