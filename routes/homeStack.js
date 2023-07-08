@@ -1,10 +1,9 @@
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
-import Home from "../Screens/home";
+import Home from "../Screens/Home";
 import ImHungry from "../Screens/ImHungry";
 import NewSpot from "../Screens/NewSpot";
 import VendorDetails from "../Screens/VendorDetails";
-import ReviewDetails from "../Screens/ReviewDetails";
 
 const screens = {
   Home: {
@@ -15,9 +14,6 @@ const screens = {
   },
   NewSpot: {
     screen: NewSpot,
-  },
-  ReviewDetails: {
-    screen: ReviewDetails,
   },
   VendorDetails: {
     screen: VendorDetails,

@@ -3,11 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { VendorProvider } from "./VendorContext";
-import Home from "./Screens/home";
+import Home from "./Screens/Home";
 import ImHungry from "./Screens/ImHungry";
 import NewSpot from "./Screens/NewSpot";
 import VendorDetails from "./Screens/VendorDetails";
-import ReviewDetails from "./Screens/ReviewDetails";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +18,6 @@ export default function App() {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="ImHungry" component={ImHungry} />
           <Stack.Screen name="NewSpot" component={NewSpot} />
-          <Stack.Screen name="ReviewDetails" component={ReviewDetails} />
           <Stack.Screen
             name="VendorDetails"
             component={VendorDetails}

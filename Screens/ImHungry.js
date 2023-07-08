@@ -10,15 +10,34 @@ import {
 } from "react-native";
 import Swiper from "react-native-swiper";
 import { Card, Button } from "react-native-elements";
-import { VendorContext } from "../VendorContext";
 import { Overlay } from "@rneui/themed";
+import axios from "axios";
 
 const ImHungry = ({ navigation }) => {
-  const { vendors, addReview } = useContext(VendorContext);
+  const [vendors, setVendors] = useState([]);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");
   const [currentVendor, setCurrentVendor] = useState(null);
   const textAreaRef = useRef();
+
+  useEffect(() => {
+    console.log("fetchhinggngngn");
+
+    fetchVendors();
+  }, []);
+
+  const fetchVendors = async () => {
+    try {
+      const response = await axios.get(
+        "http://192.168.1.150:19000:3000/api/vendors"
+      );
+      const { data } = response;
+      console.log(data, "data");
+      setVendors(data);
+    } catch (error) {
+      console.log("Error fetching vendors:", error);
+    }
+  };
 
   useEffect(() => {
     if (visible) {
