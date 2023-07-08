@@ -5,6 +5,8 @@ const pool = require("./db");
 const router = express.Router();
 
 router.get("/vendors", async (req, res) => {
+  console.log(req, "GET req");
+
   try {
     const vendors = await pool.query("SELECT * FROM vendors");
     const vendorIds = vendors.rows.map((vendor) => vendor.id);

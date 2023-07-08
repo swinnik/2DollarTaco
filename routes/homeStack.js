@@ -4,7 +4,7 @@ import Home from "../Screens/home";
 import ImHungry from "../Screens/ImHungry";
 import NewSpot from "../Screens/NewSpot";
 import VendorDetails from "../Screens/VendorDetails";
-import ReviewDetails from "../Screens/reviewDetails";
+import ReviewDetails from "../Screens/ReviewDetails";
 
 const screens = {
   Home: {
