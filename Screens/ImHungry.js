@@ -28,9 +28,7 @@ const ImHungry = ({ navigation }) => {
 
   const fetchVendors = async () => {
     try {
-      const response = await axios.get(
-        "http://192.168.1.150:19000:3000/api/vendors"
-      );
+      const response = await axios.get("http://192.168.1.150:3000/api/vendors");
       const { data } = response;
       console.log(data, "data");
       setVendors(data);
@@ -55,7 +53,6 @@ const ImHungry = ({ navigation }) => {
 
   const submitReview = () => {
     console.log("submitting review");
-    addReview(currentVendor, review);
     toggleOverlay();
   };
 

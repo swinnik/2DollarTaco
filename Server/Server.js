@@ -1,5 +1,6 @@
 const express = require("express");
 const vendorsRouter = require("./Router");
+require("dotenv").config();
 // const pool = require("./db");
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use("/api", vendorsRouter);
 
 // Start the server
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
   console.log("Server is running on port 3000");
 });
