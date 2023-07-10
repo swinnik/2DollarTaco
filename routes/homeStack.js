@@ -1,6 +1,6 @@
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
-import Home from "../Screens/Home";
+import Home from "../Screens/Landing";
 import ImHungry from "../Screens/ImHungry";
 import NewSpot from "../Screens/NewSpot";
 import VendorDetails from "../Screens/VendorDetails";

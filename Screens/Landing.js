@@ -3,7 +3,7 @@ import { Button } from "@rneui/themed";
 import React from "react";
 import TacoLogo from "../assets/TacoLogo.png";
 
-export default function home({ navigation }) {
+export default function Home({ navigation }) {
   const pressHandler = (name) => {
     navigation.navigate(name);
   };

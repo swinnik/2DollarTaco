@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { VendorProvider } from "./VendorContext";
-import Home from "./Screens/Home";
+import Home from "./Screens/Landing";
 import ImHungry from "./Screens/ImHungry";
 import NewSpot from "./Screens/NewSpot";
 import VendorDetails from "./Screens/VendorDetails";
