@@ -21,8 +21,6 @@ const ImHungry = ({ navigation }) => {
   const textAreaRef = useRef();
 
   useEffect(() => {
-    console.log("fetchhinggngngn");
-
     fetchVendors();
   }, []);
 
@@ -30,7 +28,6 @@ const ImHungry = ({ navigation }) => {
     try {
       const response = await axios.get("http://192.168.1.150:3000/api/vendors");
       const { data } = response;
-      console.log(data, "data");
       setVendors(data);
     } catch (error) {
       console.log("Error fetching vendors:", error);
@@ -87,45 +84,47 @@ const ImHungry = ({ navigation }) => {
         loop={false} // Disable looping of cards
         showsButtons={false} // Hide navigation buttons
       >
-        {vendors.map((vendor, index) => (
-          <View style={styles.cardContainer} key={index}>
-            <Card containerStyle={styles.card}>
-              <View style={styles.touchableCard} key={vendor.name}>
-                <Card.Title>{vendor.name}</Card.Title>
-                <Card.Divider />
-                <View style={styles.bottom}>
-                  <Text>You gotta try their {vendor.protein}!</Text>
-                  <Text>It only costs {vendor.price}!</Text>
-                  <View style={styles.scrollViewCurtain}>
-                    <ScrollView style={styles.scrollReviews}>
-                      {vendor.reviews &&
-                        vendor.reviews.map((review, index) => (
-                          <Text key={index}>
-                            {review.length ? "* " + review : "no reviews yet!"}
-                          </Text>
-                        ))}
-                    </ScrollView>
-                    <TouchableOpacity onPress={toggleOverlay}>
-                      <Text style={styles.scrollViewFooter}>
-                        Leave a review?
-                      </Text>
-                    </TouchableOpacity>
+        {vendors.map((vendor, index) => {
+          console.log(vendor, "VENDORRRR");
+          return (
+            <View style={styles.cardContainer} key={index}>
+              <Card containerStyle={styles.card}>
+                <View style={styles.touchableCard} key={vendor.name}>
+                  <Card.Title>{vendor.name}</Card.Title>
+                  <Card.Divider />
+                  <View style={styles.bottom}>
+                    <Text>You gotta try their {vendor.protein}!</Text>
+                    <Text>It only costs {vendor.price}!</Text>
+                    <View style={styles.scrollViewCurtain}>
+                      <ScrollView style={styles.scrollReviews}>
+                        {vendor.reviews &&
+                          vendor.reviews.map((review, index) => (
+                            <Text key={index}>
+                              {review.length
+                                ? "* " + review
+                                : "no reviews yet!"}
+                            </Text>
+                          ))}
+                      </ScrollView>
+                      <TouchableOpacity onPress={toggleOverlay}>
+                        <Text style={styles.scrollViewFooter}>
+                          Leave a review?
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Button
+                      title="Take me to my Taco!"
+                      style={styles.tacoButton}
+                      onPress={() =>
+                        openGoogleMaps(vendor.latitude, vendor.longitude)
+                      }
+                    />
                   </View>
-                  <Button
-                    title="Take me to my Taco!"
-                    style={styles.tacoButton}
-                    onPress={() =>
-                      openGoogleMaps(
-                        vendor.location.latitude,
-                        vendor.location.longitude
-                      )
-                    }
-                  />
                 </View>
-              </View>
-            </Card>
-          </View>
-        ))}
+              </Card>
+            </View>
+          );
+        })}
       </Swiper>
     </View>
   );

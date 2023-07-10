@@ -12,7 +12,7 @@ import { Button, Overlay } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { VendorContext } from "../VendorContext";
-import axios from "axios";
+const axios = require("axios");
 
 const NewSpot = ({ navigation }) => {
   const { addVendor } = useContext(VendorContext);
@@ -70,19 +70,16 @@ const NewSpot = ({ navigation }) => {
     }
   }, [vendorName, bestProtein, markerLocation]);
 
-  const handleSaveLocation = async () => {
-    try {
-      const vendorResponse = await axios.post("/api/vendors", {
+  const handleSaveLocation = () => {
+    if (vendorName && bestProtein && markerLocation) {
+      const newVendor = {
         name: vendorName,
-        latitude: markerLocation.latitude,
-        longitude: markerLocation.longitude,
+        location: markerLocation,
         protein: bestProtein,
         price: price,
-      });
-      const vendorId = vendorResponse.data.id;
-      const reviewResponse = await axios.post("/api/reviews", {
-        review,
-      });
+        reviews: [review],
+      };
+      addVendor(newVendor);
       setVendorName("");
       setBestProtein("");
       setReview("");
@@ -90,8 +87,9 @@ const NewSpot = ({ navigation }) => {
       setMarkerLocation(null);
       Keyboard.dismiss();
       navigation.navigate("Home");
-    } catch (error) {
-      console.log("Error saving location:", error);
+    } else {
+      setButtonTitle("Complete all fields and Try Again!");
+      setAttemptedSubmit(true);
     }
   };
 
