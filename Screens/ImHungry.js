@@ -96,6 +96,7 @@ const ImHungry = ({ navigation }) => {
                 <View style={styles.bottom}>
                   <Text>You gotta try their {vendor.protein}!</Text>
                   <Text>It only costs {vendor.price}!</Text>
+                  <Text>Located nearby in {vendor.city}!</Text>
                   <View style={styles.scrollViewCurtain}>
                     <ScrollView style={styles.scrollReviews}>
                       {vendor.reviews &&

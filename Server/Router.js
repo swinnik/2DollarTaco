@@ -34,16 +34,17 @@ router.get("/vendors", async (req, res) => {
 });
 
 router.post("/vendors", async (req, res) => {
-  console.log(req, "reqfasdfasf");
-  const { name, latitude, longitude, protein, price } = req.body;
+  console.log(req, "VENDORS POST");
+  const { name, latitude, longitude, city, protein, price } = req.body;
   try {
     const newVendor = await pool.query(
-      "INSERT INTO vendors (name, latitude, longitude, protein, price) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [name, latitude, longitude, protein, price]
+      "INSERT INTO vendors (name, city, latitude, longitude, protein, price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [name, city, latitude, longitude, protein, price]
     );
     res.json(newVendor.rows[0]);
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 });

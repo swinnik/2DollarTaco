@@ -8,6 +8,7 @@ const createTables = async () => {
       CREATE TABLE vendors (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
+        city VARCHAR(255) NOT NULL,
         latitude NUMERIC NOT NULL,
         longitude NUMERIC NOT NULL,
         protein VARCHAR(255) NOT NULL,
@@ -34,10 +35,10 @@ const createTables = async () => {
 
     // Insert initial data
     await pool.query(`
-      INSERT INTO vendors (name, latitude, longitude, protein, price)
+      INSERT INTO vendors (name, city, latitude, longitude, protein, price)
       VALUES
-        ('Sean''s Taco Truck', 37.7749, -122.4194, 'Carne Asada', 2.57),
-        ('Elizabeths''s Taco Truck', 34.7749, -128.4194, 'Buche', 2.5);
+        ('Sean''s Taco Truck','North Hollywood', 37.7749, -122.4194, 'Carne Asada', 2.57),
+        ('Elizabeths''s Taco Truck',  'Studio City', 34.7749, -128.4194, 'Buche', 2.5);
       
       INSERT INTO reviews (vendor_id, review, points)
       VALUES

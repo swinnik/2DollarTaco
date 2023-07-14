@@ -12,6 +12,7 @@ import { Button, Overlay } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { VendorContext } from "../VendorContext";
+import axios from "axios";
 
 const NewSpot = ({ navigation }) => {
   const { addVendor } = useContext(VendorContext);
@@ -24,6 +25,7 @@ const NewSpot = ({ navigation }) => {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");
+  const [city, setCity] = useState("");
 
   const vendorNameRef = useRef();
   const priceRef = useRef();
@@ -37,6 +39,14 @@ const NewSpot = ({ navigation }) => {
         if (status === "granted") {
           const location = await Location.getCurrentPositionAsync();
           const { latitude, longitude } = location.coords;
+          const addressResult = await Location.reverseGeocodeAsync({
+            latitude,
+            longitude,
+          });
+          if (addressResult.length > 0) {
+            const { postalCode, city } = addressResult[0];
+            setCity(city);
+          }
           const region = {
             latitude,
             longitude,
@@ -69,29 +79,41 @@ const NewSpot = ({ navigation }) => {
     }
   }, [vendorName, bestProtein, markerLocation]);
 
-  const handleSaveLocation = () => {
-    if (vendorName && bestProtein && markerLocation) {
-      const newVendor = {
-        name: vendorName,
-        location: markerLocation,
-        protein: bestProtein,
-        price: price,
-        reviews: [review],
-      };
-      addVendor(newVendor);
+  const handleSaveLocation = async () => {
+    try {
+      const vendorResponse = await axios.post(
+        "http://localhost:3000/api/vendors",
+        {
+          name: vendorName,
+          city: city,
+          latitude: markerLocation.latitude,
+          longitude: markerLocation.longitude,
+          protein: bestProtein,
+          price: price,
+        }
+      );
+      const vendorId = vendorResponse.data.id;
+      const reviewResponse = await axios.post("/api/reviews", {
+        review,
+      });
       setVendorName("");
       setBestProtein("");
       setReview("");
       setPrice("");
+      setCity("");
       setMarkerLocation(null);
       Keyboard.dismiss();
       navigation.navigate("Home");
-    } else {
-      setButtonTitle("Complete all fields and Try Again!");
-      setAttemptedSubmit(true);
-      console.log(
-        "Please enter vendor name, best protein, and select a location"
-      );
+    } catch (error) {
+      navigation.navigate("Home");
+      console.log("Error saving location:", error, "lammmeeeee");
+      // if (error.response) {
+      //   if (error.response) {
+      //     console.log("Response data:", error.response.data);
+      //     console.log("Response status:", error.response.status);
+      //     console.log("Response headers:", error.response.headers);
+      //   }
+      // }
     }
   };
 
