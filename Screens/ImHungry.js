@@ -21,8 +21,6 @@ const ImHungry = ({ navigation }) => {
   const textAreaRef = useRef();
 
   useEffect(() => {
-    console.log("fetchhinggngngn");
-
     fetchVendors();
   }, []);
 
@@ -30,7 +28,6 @@ const ImHungry = ({ navigation }) => {
     try {
       const response = await axios.get("http://192.168.1.150:3000/api/vendors");
       const { data } = response;
-      console.log(data, "data");
       setVendors(data);
     } catch (error) {
       console.log("Error fetching vendors:", error);
@@ -52,8 +49,23 @@ const ImHungry = ({ navigation }) => {
   };
 
   const submitReview = () => {
-    console.log("submitting review");
+    console.log(
+      "submitting review to vendor ID:",
+      currentVendor,
+      "review: ",
+      review
+    );
     toggleOverlay();
+    axios
+      .post(`http://localhost:3000/api/vendors/${currentVendor.id}/reviews`, {
+        review,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
 
   const openGoogleMaps = (latitude, longitude) => {
@@ -62,6 +74,11 @@ const ImHungry = ({ navigation }) => {
     Linking.openURL(url).catch(() => {
       console.log("Error opening Google Maps");
     });
+  };
+
+  const openReview = (vendor) => {
+    setCurrentVendor(vendor);
+    toggleOverlay();
   };
 
   return (
@@ -76,11 +93,12 @@ const ImHungry = ({ navigation }) => {
           <TextInput
             containerStyle={styles.overlayTextArea}
             onChangeText={setReview}
+            value={review}
             ref={textAreaRef}
             returnKeyType="done"
             onSubmitEditing={submitReview}
           />
-          {/* <Button onPress={toggleOverlay}>Submit Review</Button>x */}
+          <Button onPress={submitReview} title="Submit Review" />
         </View>
       </Overlay>
       <Swiper
@@ -96,16 +114,22 @@ const ImHungry = ({ navigation }) => {
                 <View style={styles.bottom}>
                   <Text>You gotta try their {vendor.protein}!</Text>
                   <Text>It only costs {vendor.price}!</Text>
+                  <Text>Located nearby in {vendor.city}!</Text>
                   <View style={styles.scrollViewCurtain}>
                     <ScrollView style={styles.scrollReviews}>
-                      {vendor.reviews &&
+                      {vendor.reviews ? (
                         vendor.reviews.map((review, index) => (
-                          <Text key={index}>
-                            {review.length ? "* " + review : "no reviews yet!"}
-                          </Text>
-                        ))}
+                          <Text key={index}>{`* ${review.review}`}</Text>
+                        ))
+                      ) : (
+                        <Text> No reviews yet! </Text>
+                      )}
                     </ScrollView>
-                    <TouchableOpacity onPress={toggleOverlay}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        openReview(vendor);
+                      }}
+                    >
                       <Text style={styles.scrollViewFooter}>
                         Leave a review?
                       </Text>
@@ -115,6 +139,7 @@ const ImHungry = ({ navigation }) => {
                     title="Take me to my Taco!"
                     style={styles.tacoButton}
                     onPress={() =>
+                      setCurrentVendor(vendor.id) &&
                       openGoogleMaps(
                         vendor.location.latitude,
                         vendor.location.longitude
@@ -181,7 +206,7 @@ const styles = StyleSheet.create({
   },
 
   scrollReviews: {
-    height: "60%",
+    height: "50%",
     width: "100%",
     marginVertical: 10,
     backgroundColor: "lightgrey",
