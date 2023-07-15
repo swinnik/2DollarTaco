@@ -5,7 +5,7 @@ const pool = require("./db");
 const router = express.Router();
 
 router.get("/vendors", async (req, res) => {
-  console.log(req, "GET req");
+  // console.log(req, "GET req");
 
   try {
     const vendors = await pool.query("SELECT * FROM vendors");

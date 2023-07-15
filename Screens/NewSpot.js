@@ -79,42 +79,67 @@ const NewSpot = ({ navigation }) => {
     }
   }, [vendorName, bestProtein, markerLocation]);
 
-  const handleSaveLocation = async () => {
-    try {
-      const vendorResponse = await axios.post(
-        "http://localhost:3000/api/vendors",
-        {
-          name: vendorName,
-          city: city,
-          latitude: markerLocation.latitude,
-          longitude: markerLocation.longitude,
-          protein: bestProtein,
-          price: price,
-        }
-      );
-      const vendorId = vendorResponse.data.id;
-      const reviewResponse = await axios.post("/api/reviews", {
-        review,
+  // const handleSaveLocation = async () => {
+  //   try {
+  //     const vendorResponse = await axios.post(
+  //       "http://localhost:3000/api/vendors",
+  //       {
+  //         name: vendorName,
+  //         city: city,
+  //         latitude: markerLocation.latitude,
+  //         longitude: markerLocation.longitude,
+  //         protein: bestProtein,
+  //         price: price,
+  //       }
+  //     );
+  //     const vendorId = vendorResponse.data.id;
+  //     const reviewResponse = await axios.post("/api/reviews", {
+  //       review,
+  //     });
+  //     setVendorName("");
+  //     setBestProtein("");
+  //     setReview("");
+  //     setPrice("");
+  //     setCity("");
+  //     setMarkerLocation(null);
+  //     Keyboard.dismiss();
+  //     navigation.navigate("Home");
+  //   } catch (error) {
+  //     navigation.navigate("Home");
+  //     console.log("Error saving location:", error, "lammmeeeee");
+  //   }
+  // };
+
+  const handleSaveLocation = () => {
+    axios
+      .post("http://localhost:3000/api/vendors", {
+        name: vendorName,
+        city: city,
+        latitude: markerLocation.latitude,
+        longitude: markerLocation.longitude,
+        protein: bestProtein,
+        price: price,
+      })
+      .then((vendorResponse) => {
+        const vendorId = vendorResponse.data.id;
+        return axios.post(
+          `http://localhost:3000/api/vendors/${vendorId}/reviews`,
+          { review }
+        );
+      })
+      .then(() => {
+        setVendorName("");
+        setBestProtein("");
+        setReview("");
+        setPrice("");
+        setCity("");
+        setMarkerLocation(null);
+        Keyboard.dismiss();
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.log("Error saving location:", error, "lammmeeeee");
       });
-      setVendorName("");
-      setBestProtein("");
-      setReview("");
-      setPrice("");
-      setCity("");
-      setMarkerLocation(null);
-      Keyboard.dismiss();
-      navigation.navigate("Home");
-    } catch (error) {
-      navigation.navigate("Home");
-      console.log("Error saving location:", error, "lammmeeeee");
-      // if (error.response) {
-      //   if (error.response) {
-      //     console.log("Response data:", error.response.data);
-      //     console.log("Response status:", error.response.status);
-      //     console.log("Response headers:", error.response.headers);
-      //   }
-      // }
-    }
   };
 
   useEffect(() => {
@@ -159,6 +184,7 @@ const NewSpot = ({ navigation }) => {
             <TextInput
               containerStyle={styles.overlayTextArea}
               onChangeText={setReview}
+              value={review}
               ref={textAreaRef}
               returnKeyType="next"
               onSubmitEditing={submitReview}
