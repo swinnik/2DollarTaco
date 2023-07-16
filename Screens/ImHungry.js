@@ -28,7 +28,9 @@ const ImHungry = ({ navigation, route }) => {
 
   const fetchVendors = async () => {
     try {
-      const response = await axios.get("http://192.168.1.150:3000/api/vendors");
+      const response = await axios.get(
+        `http://192.168.1.150:3000/api/vendors?city=${city}`
+      );
       const { data } = response;
       setVendors(data);
     } catch (error) {

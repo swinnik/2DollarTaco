@@ -6,9 +6,12 @@ const router = express.Router();
 
 router.get("/vendors", async (req, res) => {
   // console.log(req, "GET req");
+  const { city } = req.query;
 
   try {
-    const vendors = await pool.query("SELECT * FROM vendors");
+    const vendors = await pool.query("SELECT * FROM vendors WHERE city = $1", [
+      city,
+    ]);
     const vendorIds = vendors.rows.map((vendor) => vendor.id);
 
     const reviews = await pool.query(
