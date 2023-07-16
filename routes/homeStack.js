@@ -4,6 +4,7 @@ import Home from "../Screens/Landing";
 import ImHungry from "../Screens/ImHungry";
 import NewSpot from "../Screens/NewSpot";
 import VendorDetails from "../Screens/VendorDetails";
+import Loading from "../Screens/Loading";
 
 const screens = {
   Home: {
