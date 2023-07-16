@@ -13,20 +13,24 @@ import { Card, Button } from "react-native-elements";
 import { Overlay } from "@rneui/themed";
 import axios from "axios";
 
-const ImHungry = ({ navigation }) => {
+const ImHungry = ({ navigation, route }) => {
+  const { city, latitude, longitude, initialRegion } = route.params;
   const [vendors, setVendors] = useState([]);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");
   const [currentVendor, setCurrentVendor] = useState(null);
   const textAreaRef = useRef();
+  const [fetch, setFetch] = useState(false);
 
   useEffect(() => {
     fetchVendors();
-  }, []);
+  }, [fetch]);
 
   const fetchVendors = async () => {
     try {
-      const response = await axios.get("http://192.168.1.150:3000/api/vendors");
+      const response = await axios.get(
+        `http://192.168.1.150:3000/api/vendors?city=${city}`
+      );
       const { data } = response;
       setVendors(data);
     } catch (error) {
@@ -61,7 +65,8 @@ const ImHungry = ({ navigation }) => {
         review,
       })
       .then((res) => {
-        console.log(res);
+        setFetch(!fetch);
+        setReview("");
       })
       .catch((error) => {
         console.log("error", error);
@@ -83,6 +88,7 @@ const ImHungry = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={`textAlign: center`}>You're in {city}!</Text>
       <Overlay
         isVisible={visible}
         onBackdropPress={toggleOverlay}

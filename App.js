@@ -7,6 +7,7 @@ import Home from "./Screens/Landing";
 import ImHungry from "./Screens/ImHungry";
 import NewSpot from "./Screens/NewSpot";
 import VendorDetails from "./Screens/VendorDetails";
+import Loading from "./Screens/Loading";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ export default function App() {
     <VendorProvider>
       <NavigationContainer>
         <Stack.Navigator>
+          <Stack.Screen name="Loading" component={Loading} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="ImHungry" component={ImHungry} />
           <Stack.Screen name="NewSpot" component={NewSpot} />

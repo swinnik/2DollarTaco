@@ -3,13 +3,16 @@ import { Button } from "@rneui/themed";
 import React from "react";
 import TacoLogo from "../assets/TacoLogo.png";
 
-export default function Home({ navigation }) {
+export default function Home({ navigation, route }) {
+  const { city, latitude, longitude, initialRegion } = route.params;
   const pressHandler = (name) => {
-    navigation.navigate(name);
+    navigation.navigate(name, { city, latitude, longitude, initialRegion });
   };
+  console.log(route);
 
   return (
     <View style={styles.container}>
+      <Text style={{ alignSelf: "center" }}>{city}</Text>
       <Button
         style={styles.wideButton}
         title="New Spot?"
