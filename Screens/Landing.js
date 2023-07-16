@@ -9,6 +9,9 @@ export default function Home({ navigation, route }) {
     navigation.navigate(name, { city, latitude, longitude, initialRegion });
   };
   console.log(route);
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
