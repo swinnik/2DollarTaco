@@ -15,7 +15,7 @@ import axios from "axios";
 import { LocationContext } from "../LocationContext";
 
 const ImHungry = ({ navigation, route }) => {
-  const { city, latitude, longitude, initialRegion } = route.params;
+  const { city } = useContext(LocationContext);
   const [vendors, setVendors] = useState([]);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");

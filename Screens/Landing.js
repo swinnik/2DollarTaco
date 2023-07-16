@@ -5,9 +5,14 @@ import TacoLogo from "../assets/TacoLogo.png";
 import { LocationContext } from "../LocationContext";
 
 export default function Home({ navigation, route }) {
-  const { city } = useContext(LocationContext);
+  const { city, initialRegion } = useContext(LocationContext);
   const pressHandler = (name) => {
-    navigation.navigate(name, { city, latitude, longitude, initialRegion });
+    navigation.navigate(name, {
+      city,
+      latitude: initialRegion.latitude,
+      longitude: initialRegion.longitude,
+      initialRegion,
+    });
   };
   console.log(city, "location");
   React.useLayoutEffect(() => {

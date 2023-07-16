@@ -11,11 +11,9 @@ import { Picker } from "@react-native-picker/picker";
 import { Button, Overlay } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { VendorContext } from "../VendorContext";
 import axios from "axios";
 
 const NewSpot = ({ navigation }) => {
-  const { addVendor } = useContext(VendorContext);
   const [initialRegion, setInitialRegion] = useState(null);
   const [markerLocation, setMarkerLocation] = useState(null);
   const [vendorName, setVendorName] = useState("");
