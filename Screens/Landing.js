@@ -1,14 +1,15 @@
 import { StyleSheet, View, Text, Image } from "react-native";
 import { Button } from "@rneui/themed";
-import React from "react";
+import React, { useContext } from "react";
 import TacoLogo from "../assets/TacoLogo.png";
+import { LocationContext } from "../LocationContext";
 
 export default function Home({ navigation, route }) {
-  const { city, latitude, longitude, initialRegion } = route.params;
+  const { city } = useContext(LocationContext);
   const pressHandler = (name) => {
     navigation.navigate(name, { city, latitude, longitude, initialRegion });
   };
-  console.log(route);
+  console.log(city, "location");
   React.useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);

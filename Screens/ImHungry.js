@@ -12,6 +12,7 @@ import Swiper from "react-native-swiper";
 import { Card, Button } from "react-native-elements";
 import { Overlay } from "@rneui/themed";
 import axios from "axios";
+import { LocationContext } from "../LocationContext";
 
 const ImHungry = ({ navigation, route }) => {
   const { city, latitude, longitude, initialRegion } = route.params;
@@ -88,7 +89,7 @@ const ImHungry = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={`textAlign: center`}>You're in {city}!</Text>
+      <Text style={{ alignSelf: "center" }}>You're in {city}!</Text>
       <Overlay
         isVisible={visible}
         onBackdropPress={toggleOverlay}

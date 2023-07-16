@@ -1,10 +1,12 @@
 import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import * as Location from "expo-location";
+import { LocationContext } from "../LocationContext";
 
 const Loading = ({ navigation }) => {
-  const [city, setCity] = useState("");
-  const [initialRegion, setInitialRegion] = useState(null);
+  //   const [city, setCity] = useState("");
+  //   const [initialRegion, setInitialRegion] = useState(null);
+  const { setCity, setInitialRegion } = useContext(LocationContext);
   const [markerLocation, setMarkerLocation] = useState(null);
 
   useEffect(() => {
@@ -20,8 +22,8 @@ const Loading = ({ navigation }) => {
           });
           //   if (addressResult.length > 0) {
           let { postalCode, city } = addressResult[0];
-          // setCity(city);
-          //   }
+          setCity(city);
+          //   }fn
           const region = {
             latitude,
             longitude,
@@ -33,13 +35,16 @@ const Loading = ({ navigation }) => {
             latitude: region.latitude,
             longitude: region.longitude,
           });
-          navigation.navigate("Home", {
-            latitude: region.latitude,
-            longitude: region.longitude,
-            city: city,
-            // postalCode: postalCode,
-            initialRegion: region,
-          });
+          navigation.navigate(
+            "Home"
+            //   , {
+            //     latitude: region.latitude,
+            //     longitude: region.longitude,
+            //     city: city,
+            //     // postalCode: postalCode,
+            //     initialRegion: region,
+            //   }
+          );
         } else {
           console.log("Location permission not granted");
         }

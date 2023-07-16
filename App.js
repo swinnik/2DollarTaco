@@ -8,12 +8,14 @@ import ImHungry from "./Screens/ImHungry";
 import NewSpot from "./Screens/NewSpot";
 import VendorDetails from "./Screens/VendorDetails";
 import Loading from "./Screens/Loading";
+import { LocationContext } from "./LocationContext";
+import { LocationProvider } from "./LocationContext";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <VendorProvider>
+    <LocationProvider>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Loading" component={Loading} />
@@ -27,7 +29,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </VendorProvider>
+    </LocationProvider>
   );
 }
 
