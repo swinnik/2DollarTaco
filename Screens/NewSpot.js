@@ -12,9 +12,13 @@ import { Button, Overlay } from "@rneui/themed";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import axios from "axios";
+import { LocationContext } from "../LocationContext";
 
-const NewSpot = ({ navigation }) => {
-  const [initialRegion, setInitialRegion] = useState(null);
+const NewSpot = ({ navigation, route }) => {
+  const { city, initialRegion, latitude, longitude } = route.params;
+  console.log(initialRegion, "city");
+
+  // const [initialRegion, setInitialRegion] = useState(null);
   const [markerLocation, setMarkerLocation] = useState(null);
   const [vendorName, setVendorName] = useState("");
   const [bestProtein, setBestProtein] = useState("");
@@ -23,7 +27,7 @@ const NewSpot = ({ navigation }) => {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");
-  const [city, setCity] = useState("");
+  const [vendorCity, setVendorCity] = useState(city);
 
   const vendorNameRef = useRef();
   const priceRef = useRef();
@@ -31,88 +35,34 @@ const NewSpot = ({ navigation }) => {
   const textAreaRef = useRef();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status === "granted") {
-          const location = await Location.getCurrentPositionAsync();
-          const { latitude, longitude } = location.coords;
-          const addressResult = await Location.reverseGeocodeAsync({
-            latitude,
-            longitude,
-          });
-          if (addressResult.length > 0) {
-            const { postalCode, city } = addressResult[0];
-            setCity(city);
-          }
-          const region = {
-            latitude,
-            longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          };
-          setInitialRegion(region);
-          setMarkerLocation({
-            latitude: region.latitude,
-            longitude: region.longitude,
-          });
-        } else {
-          console.log("Location permission not granted");
-        }
-      } catch (error) {
-        console.log("Error getting current location:", error);
-      }
-    })();
+    setMarkerLocation({
+      latitude: latitude,
+      longitude: longitude,
+    });
   }, []);
 
-  useEffect(() => {
-    if (
-      attemptedSubmit &&
-      vendorName !== "" &&
-      bestProtein !== "" &&
-      price !== "" &&
-      markerLocation
-    ) {
-      setButtonTitle("Save Location");
-    }
-  }, [vendorName, bestProtein, markerLocation]);
-
-  // const handleSaveLocation = async () => {
-  //   try {
-  //     const vendorResponse = await axios.post(
-  //       "http://localhost:3000/api/vendors",
-  //       {
-  //         name: vendorName,
-  //         city: city,
-  //         latitude: markerLocation.latitude,
-  //         longitude: markerLocation.longitude,
-  //         protein: bestProtein,
-  //         price: price,
-  //       }
-  //     );
-  //     const vendorId = vendorResponse.data.id;
-  //     const reviewResponse = await axios.post("/api/reviews", {
-  //       review,
-  //     });
-  //     setVendorName("");
-  //     setBestProtein("");
-  //     setReview("");
-  //     setPrice("");
-  //     setCity("");
-  //     setMarkerLocation(null);
-  //     Keyboard.dismiss();
-  //     navigation.navigate("Home");
-  //   } catch (error) {
-  //     navigation.navigate("Home");
-  //     console.log("Error saving location:", error, "lammmeeeee");
+  // useEffect(() => {
+  //   if (
+  //     (attemptedSubmit && vendorName === "") ||
+  //     bestProtein === "" ||
+  //     price == "" ||
+  //     markerLocation
+  //   ) {
+  //     setButtonTitle("Something's missing");
   //   }
-  // };
+  // }, [vendorName, bestProtein, markerLocation]);
 
   const handleSaveLocation = () => {
+    setVendorCity(
+      Location.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      })
+    );
     axios
-      .post("http://localhost:3000/api/vendors", {
+      .post("http://192.168.86.112:3000/api/vendors", {
         name: vendorName,
-        city: city,
+        city: vendorCity,
         latitude: markerLocation.latitude,
         longitude: markerLocation.longitude,
         protein: bestProtein,
@@ -121,7 +71,7 @@ const NewSpot = ({ navigation }) => {
       .then((vendorResponse) => {
         const vendorId = vendorResponse.data.id;
         return axios.post(
-          `http://localhost:3000/api/vendors/${vendorId}/reviews`,
+          `http://192.168.86.112:3000/api/vendors/${vendorId}/reviews`,
           { review }
         );
       })
@@ -130,7 +80,7 @@ const NewSpot = ({ navigation }) => {
         setBestProtein("");
         setReview("");
         setPrice("");
-        setCity("");
+        setVendorCity("");
         setMarkerLocation(null);
         Keyboard.dismiss();
         navigation.navigate("Home");
@@ -166,7 +116,7 @@ const NewSpot = ({ navigation }) => {
         }}
       >
         {markerLocation && (
-          <Marker coordinate={markerLocation} title="Current Location" />
+          <Marker coordinate={markerLocation} title={vendorName} />
         )}
       </MapView>
 
