@@ -14,8 +14,8 @@ import { Overlay } from "@rneui/themed";
 import axios from "axios";
 import { LocationContext } from "../LocationContext";
 
-const ImHungry = ({ navigation, route }) => {
-  const { city } = useContext(LocationContext);
+const ImHungry = ({ navigation }) => {
+  const { city, initialRegion } = useContext(LocationContext);
   const [vendors, setVendors] = useState([]);
   const [visible, setVisible] = useState(false);
   const [review, setReview] = useState("");
@@ -27,12 +27,46 @@ const ImHungry = ({ navigation, route }) => {
     fetchVendors();
   }, [fetch]);
 
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = ((lat2 - lat1) * Math.PI) / 180; // Latitude difference in radians
+    const dLon = ((lon2 - lon1) * Math.PI) / 180; // Longitude difference in radians
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+
+    return distance;
+  };
+
   const fetchVendors = async () => {
     try {
       const response = await axios.get(
         `http://192.168.86.112:3000/api/vendors?city=${city}`
       );
       const { data } = response;
+      console.log(data, "data");
+      const sortedVendors = data.sort((vendorA, vendorB) => {
+        const distanceA = calculateDistance(
+          initialRegion.latitude,
+          initialRegion.longitude,
+          vendorA.latitude,
+          vendorA.longitude
+        );
+        const distanceB = calculateDistance(
+          initialRegion.latitude,
+          initialRegion.longitude,
+          vendorB.latitude,
+          vendorB.longitude
+        );
+        return distanceA - distanceB;
+      });
+
       setVendors(data);
     } catch (error) {
       console.log("Error fetching vendors:", error);
@@ -89,7 +123,9 @@ const ImHungry = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ alignSelf: "center" }}>You're in {city}!</Text>
+      <Text style={{ alignSelf: "center" }}>
+        You're in {city}! {initialRegion.latitude}, {initialRegion.longitude}
+      </Text>
       <Overlay
         isVisible={visible}
         onBackdropPress={toggleOverlay}
