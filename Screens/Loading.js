@@ -1,6 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import * as Location from "expo-location";
+import TacoLogo from "../assets/TacoLogo.png";
 import { LocationContext } from "../LocationContext";
 
 const Loading = ({ navigation }) => {
@@ -23,7 +24,7 @@ const Loading = ({ navigation }) => {
           //   if (addressResult.length > 0) {
           let { postalCode, city } = addressResult[0];
           setCity(city);
-          //   }fn
+          //   }
           const region = {
             latitude,
             longitude,
@@ -35,16 +36,7 @@ const Loading = ({ navigation }) => {
             latitude: region.latitude,
             longitude: region.longitude,
           });
-          navigation.navigate(
-            "Home"
-            //   , {
-            //     latitude: region.latitude,
-            //     longitude: region.longitude,
-            //     city: city,
-            //     // postalCode: postalCode,
-            //     initialRegion: region,
-            //   }
-          );
+          navigation.navigate("Home");
         } else {
           console.log("Location permission not granted");
         }
@@ -55,9 +47,18 @@ const Loading = ({ navigation }) => {
   }, []);
   return (
     <View>
-      <Text>Loading</Text>
+      {/* <Text>Loading</Text> */}
+      <Image source={TacoLogo} alt="Taco Logo" style={styles.image} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    alignSelf: "center",
+    position: "absolute",
+    top: 200,
+  },
+});
 
 export default Loading;

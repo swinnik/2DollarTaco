@@ -5,11 +5,15 @@ import ImHungry from "../Screens/ImHungry";
 import NewSpot from "../Screens/NewSpot";
 import VendorDetails from "../Screens/VendorDetails";
 import Loading from "../Screens/Loading";
+import Donation from "../Screens/Donation";
 
 const screens = {
   Home: {
     screen: Home,
   },
+  // Donation: {
+  //   screen: Donation,
+  // },
   ImHungry: {
     screen: ImHungry,
   },

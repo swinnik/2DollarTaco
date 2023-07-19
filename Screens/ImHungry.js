@@ -124,7 +124,7 @@ const ImHungry = ({ navigation, route }) => {
                   <Text>Located nearby in {vendor.city}!</Text>
                   <View style={styles.scrollViewCurtain}>
                     <ScrollView style={styles.scrollReviews}>
-                      {vendor.reviews ? (
+                      {vendor.reviews.length > 1 ? (
                         vendor.reviews.map((review, index) => (
                           <Text key={index}>{`* ${review.review}`}</Text>
                         ))

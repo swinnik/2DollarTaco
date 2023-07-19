@@ -6,8 +6,8 @@ import { VendorProvider } from "./VendorContext";
 import Home from "./Screens/Landing";
 import ImHungry from "./Screens/ImHungry";
 import NewSpot from "./Screens/NewSpot";
-import VendorDetails from "./Screens/VendorDetails";
 import Loading from "./Screens/Loading";
+import Donation from "./Screens/Donation";
 import { LocationContext } from "./LocationContext";
 import { LocationProvider } from "./LocationContext";
 
@@ -22,11 +22,12 @@ export default function App() {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="ImHungry" component={ImHungry} />
           <Stack.Screen name="NewSpot" component={NewSpot} />
-          <Stack.Screen
+          <Stack.Screen name="Donation" component={Donation} />
+          {/* <Stack.Screen
             name="VendorDetails"
             component={VendorDetails}
             options={{ headerShown: false }} // Optional: Hide the header if desired
-          />
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </LocationProvider>
