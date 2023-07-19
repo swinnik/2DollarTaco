@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { Button } from "@rneui/themed";
 import React, { useContext } from "react";
 import TacoLogo from "../assets/TacoLogo.png";
@@ -19,6 +19,10 @@ export default function Home({ navigation, route }) {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
+  const handleTacoPress = () => {
+    navigation.navigate("Donation");
+  };
+
   return (
     <View style={styles.container}>
       <Text style={{ alignSelf: "center" }}>{city}</Text>
@@ -27,7 +31,9 @@ export default function Home({ navigation, route }) {
         title="New Spot?"
         onPress={() => pressHandler("NewSpot")}
       />
-      <Image source={TacoLogo} alt="Taco Logo" style={styles.image} />
+      <TouchableOpacity onPress={() => pressHandler("Donation")}>
+        <Image source={TacoLogo} alt="Taco Logo" style={styles.image} />
+      </TouchableOpacity>
       <Button
         style={styles.wideButton}
         title="I'm Hungry!!"
